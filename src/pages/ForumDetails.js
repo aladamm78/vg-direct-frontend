@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/ForumDetails.css";
+import { BASE_URL } from "../services/api";
+
 
 function ForumDetail() {
   const { forumTitle } = useParams(); // Get the forum title from the URL
@@ -16,7 +18,7 @@ function ForumDetail() {
     const fetchForumPost = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/forum-posts/title/${encodeURIComponent(forumTitle)}`
+          `${BASE_URL}/api/forum-posts/title/${encodeURIComponent(forumTitle)}`
         );
         if (!response.ok) throw new Error("Failed to fetch forum post");
         const data = await response.json();
@@ -54,7 +56,7 @@ function ForumDetail() {
     if (!newComment.trim()) return;
 
     try {
-      const response = await fetch("http://localhost:5000/api/comments", {
+      const response = await fetch(`${BASE_URL}/api/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +81,7 @@ function ForumDetail() {
     if (!newReply.trim() || !replyTarget) return;
 
     try {
-      const response = await fetch("http://localhost:5000/api/comments/reply", {
+      const response = await fetch(`${BASE_URL}/api/comments/reply`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

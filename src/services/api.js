@@ -84,7 +84,7 @@ const getForumsCreatedByUser = async (userId, token) => {
 };
 
 const fetchReviews = async (rawgId) => {
-  const response = await fetch(`/api/reviews/${rawgId}`);
+  const response = await fetch(`${BASE_URL}/reviews/${rawgId}`);
   return response.json();
 };
 
@@ -197,5 +197,7 @@ const updateUserProfile = async (username, data) => {
     throw error;
   }
 };
+
+export { BASE_URL };
 
 export { apiClient, addOrUpdateRating, getAverageRating, getUserRating, fetchOrAddGame, getForumsCreatedByUser, fetchReviews, addReview, searchGames, updateUserProfile };

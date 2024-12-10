@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Forum.css";
 import { useNavigate, Link } from "react-router-dom";
+import { BASE_URL } from "../services/api";
 
 function Forum() {
   const [posts, setPosts] = useState([]);
@@ -15,8 +16,8 @@ function Forum() {
     const fetchData = async () => {
       try {
         const [postsResponse, genresResponse] = await Promise.all([
-          fetch("http://localhost:5000/api/forum-posts"),
-          fetch("http://localhost:5000/api/genres"),
+          fetch(`${BASE_URL}/api/forum-posts`),
+          fetch(`${BASE_URL}/api/genres`),
         ]);
 
         if (!postsResponse.ok || !genresResponse.ok) {
@@ -43,7 +44,7 @@ function Forum() {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:5000/api/forum-posts/search?query=${searchQuery}`
+        `${BASE_URL}/api/forum-posts/search?query=${searchQuery}`
       );
 
       if (!response.ok) {
@@ -64,7 +65,7 @@ function Forum() {
     if (!genre) {
       // If no genre is selected, fetch all posts
       try {
-        const response = await fetch("http://localhost:5000/api/forum-posts");
+        const response = await fetch(`${BASE_URL}/api/forum-posts/search?query=${searchQuery}`);
         const data = await response.json();
         setPosts(data || []);
       } catch (error) {
@@ -76,7 +77,7 @@ function Forum() {
     // Fetch posts filtered by genre
     try {
       const response = await fetch(
-        `http://localhost:5000/api/forum-posts/filter-by-genre?genre=${genre}`
+        `${BASE_URL}/api/forum-posts/filter-by-genre?genre=${genre}`
       );
 
       if (!response.ok) {

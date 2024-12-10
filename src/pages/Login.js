@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import "../styles/AuthPages.css"
+import { BASE_URL } from "../services/api";
 
 function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -18,7 +19,7 @@ function Login() {
     e.preventDefault();
     setError(null); // Clear any previous errors
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch(`${BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

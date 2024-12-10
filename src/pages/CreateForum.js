@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/CreateForum.css";
+import { BASE_URL } from "../services/api";
 
 function CreateForum() {
   const [formData, setFormData] = useState({
@@ -27,7 +28,7 @@ function CreateForum() {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/genres");
+        const response = await fetch(`${BASE_URL}/api/genres`);
         if (!response.ok) {
           throw new Error("Failed to fetch genres");
         }
@@ -81,7 +82,7 @@ function CreateForum() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/forum-posts", {
+      const response = await fetch(`${BASE_URL}/api/forum-posts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
