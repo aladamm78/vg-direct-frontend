@@ -1,0 +1,110 @@
+/* Forum.css */
+
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .forum-container {
+    padding: 20px;
+  }
+  
+  .forum-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-input {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .search-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .posts-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .post-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .post-title {
+    margin: 0 0 10px;
+  }
+  
+  .post-body {
+    margin: 0 0 10px;
+  }
+  
+  .post-tags {
+    margin: 0 0 10px;
+    font-style: italic;
+  }
+  
+  .post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .post-actions {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .like-button,
+  .comment-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+  }
+  
+  .like-button {
+    background-color: #28a745;
+  }
+  
+  .comment-button {
+    background-color: #17a2b8;
+  }
+  
+  .post-date {
+    color: #6c757d;
+    font-size: 0.9em;
+  }
+  
+  .create-forum-button,
+  .cancel-forum-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    transition: background-color 0.3s ease;
+    background-color: #007bff;
+  }

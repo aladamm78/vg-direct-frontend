@@ -1,0 +1,137 @@
+/* General grid container for the directory */
+/* Center the title */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem; /* Optional: Adjust font size for better visual hierarchy */
+  color: #333; /* Optional: Adjust color if needed */
+}
+
+
+
+
+
+.directory-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns */
+    grid-gap: 20px; /* Space between cards */
+    padding: 20px;
+  }
+  
+  /* Card style */
+  .game-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Hover effect for card */
+  .game-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  /* Style for the game image */
+  .game-card img {
+    width: 100%;
+    height: 180px; 
+    object-fit: cover; 
+    border-bottom: 1px solid #ccc;
+  }
+  
+  /* Game title (link) */
+  .game-card h2 {
+    font-size: 16px;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  /* Game title hover effect */
+  .game-card h2:hover {
+    color: #0056b3;
+  }
+  
+  /* Pagination button styles */
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+  }
+  
+  .pagination-controls button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .pagination-controls button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination-controls button:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+  
+  /* Input and Go button for page jump */
+  .page-input-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .page-input-container input {
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .page-input-container button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .page-input-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .page-info {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  
+.search-bar {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-bar input {
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

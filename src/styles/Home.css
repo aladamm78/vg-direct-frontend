@@ -1,0 +1,25 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #4a90e2;
+    margin-bottom: 1.5rem;
+  }
+  
+  p {
+    font-size: 1.25rem;
+    color: #6b7280;
+    line-height: 1.8;
+  }
+  
+  .container p:hover {
+    color: #4a90e2;
+    transition: color 0.3s ease-in-out;
+  }
+  
