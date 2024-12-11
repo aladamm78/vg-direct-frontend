@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { UserProvider } from "./context/UserContext";
 import Home from "./pages/Home";
@@ -15,17 +16,23 @@ import ForumDetail from "./pages/ForumDetails";
 import Footer from "./components/Footer";
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
   return (
     <UserProvider>
       <Router>
-        <Navbar />
-        <AppRoutes />
+        <Navbar onSearch={handleSearch} />
+        <AppRoutes searchQuery={searchQuery} />
       </Router>
     </UserProvider>
   );
 }
 
-function AppRoutes() {
+function AppRoutes({ searchQuery }) {
   const location = useLocation();
 
   // Only show footer for /games and /games/:id routes
@@ -35,7 +42,7 @@ function AppRoutes() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/games" element={<Directory />} />
+        <Route path="/games" element={<Directory searchQuery={searchQuery} />} />
         <Route path="/games/:id" element={<GameDetails />} />
         <Route path="/forum" element={<Forum />} />
         <Route path="/forum/:forumTitle" element={<ForumDetail />} />

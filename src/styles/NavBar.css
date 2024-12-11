@@ -6,12 +6,14 @@
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    flex-wrap: wrap; /* Allow wrapping for responsive design */
 }
 
 /* Left navigation links */
 .nav-left {
     display: flex;
     gap: 24px; /* Space between links */
+    align-items: center;
 }
 
 /* Brand link */
@@ -32,12 +34,13 @@
     cursor: pointer;
     text-decoration: none;
     color: white;
-  }
+}
 
-  .nav-link.clickable {
-    cursor: pointer; /* Ensures clickable span also has the correct cursor */
+.nav-link.clickable {
+    cursor: pointer;
     color: white; /* Keeps the link color consistent */
-  }
+}
+
 .nav-link:hover {
     color: #731bd8;
 }
@@ -47,12 +50,39 @@
     display: flex;
     align-items: center;
     gap: 16px; /* Space between elements */
+    flex-wrap: wrap; /* Allow wrapping for responsive design */
+    justify-content: flex-end; /* Align to the right */
 }
 
-/* Welcome message */
-.welcome-message {
-    color: #ecf0f1;
-    font-size: 16px;
+/* Search bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-grow: 1; /* Allow it to grow to fill available space */
+    max-width: 400px; /* Set a maximum width */
+}
+
+.search-bar input {
+    flex-grow: 1; /* Make the input expand to fill space */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-bar button {
+    padding: 8px 12px;
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3;
+    color: white;
 }
 
 /* Logout button */
@@ -72,14 +102,39 @@
     transform: translateY(-2px);
 }
 
+/* Welcome message */
+.welcome-message {
+    color: #ecf0f1;
+    font-size: 16px;
+}
+
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
+    .navbar {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: stretch; /* Stretch children to full width */
+    }
+
     .nav-left, .nav-right {
-        flex-direction: column;
+        flex-direction: column; /* Stack links vertically */
+        align-items: flex-start; /* Align items to the left */
         gap: 8px;
+        width: 100%; /* Make the elements take up full width */
+    }
+
+    .search-bar {
+        width: 100%; /* Make the search bar full width */
+    }
+
+    .search-bar button {
+        width: auto; /* Keep button width auto for responsive design */
+    }
+
+    .logout-button {
+        align-self: flex-end; /* Align logout button to the right */
     }
 
     .welcome-message {
-        margin-bottom: 8px;
+        align-self: flex-end; /* Align welcome message to the right */
     }
 }
