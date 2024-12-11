@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import "../styles/ForumDetails.css";
 import { BASE_URL } from "../services/api";
 
-
 function ForumDetail() {
   const { forumTitle } = useParams(); // Get the forum title from the URL
   const [forumPost, setForumPost] = useState(null);
@@ -12,9 +11,14 @@ function ForumDetail() {
   const [newComment, setNewComment] = useState(""); // State for new comment
   const [newReply, setNewReply] = useState(""); // State for new reply
   const [replyTarget, setReplyTarget] = useState(null); // ID of the comment being replied to
-  const token = localStorage.getItem("token"); 
+  const [error, setError] = useState(""); // State for error messages
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
+    if (!token) {
+      setError("You need to be signed in to interact with this forum.");
+    }
+
     const fetchForumPost = async () => {
       try {
         const response = await fetch(
@@ -50,9 +54,13 @@ function ForumDetail() {
     };
 
     fetchForumPost();
-  }, [forumTitle]);
+  }, [forumTitle, token]);
 
   const handleCommentSubmit = async () => {
+    if (!token) {
+      setError("You need to be signed in to post a comment.");
+      return;
+    }
     if (!newComment.trim()) return;
 
     try {
@@ -70,14 +78,19 @@ function ForumDetail() {
       }
 
       const comment = await response.json();
-      setComments((prev) => [...prev, { ...comment, replies: [] }]); // Add the new comment as a top-level comment
-      setNewComment(""); // Clear the input
+      setComments((prev) => [...prev, { ...comment, replies: [] }]);
+      setNewComment("");
+      setError(""); // Clear error after successful submission
     } catch (error) {
       console.error("Error posting comment:", error.message);
     }
   };
 
   const handleReplySubmit = async () => {
+    if (!token) {
+      setError("You need to be signed in to post a reply.");
+      return;
+    }
     if (!newReply.trim() || !replyTarget) return;
 
     try {
@@ -108,8 +121,9 @@ function ForumDetail() {
         )
       );
 
-      setNewReply(""); 
-      setReplyTarget(null); // Reset reply target
+      setNewReply("");
+      setReplyTarget(null);
+      setError(""); // Clear error after successful submission
     } catch (error) {
       console.error("Error posting reply:", error.message);
     }
@@ -141,6 +155,7 @@ function ForumDetail() {
       )}
 
       <h2>Comments</h2>
+      {error && <p className="error-message" style={{ color: "red" }}>{error}</p>}
       <ul>
         {comments.length > 0 ? (
           comments.map((comment) => (
@@ -158,10 +173,20 @@ function ForumDetail() {
                   <textarea
                     placeholder="Write a reply..."
                     value={newReply}
-                    onChange={(e) => setNewReply(e.target.value)}
+                    onChange={(e) => {
+                      setNewReply(e.target.value);
+                      if (error) setError(""); // Clear error when the user types
+                    }}
                   />
                   <button onClick={handleReplySubmit}>Post Reply</button>
-                  <button onClick={() => setReplyTarget(null)}>Cancel</button>
+                  <button
+                    onClick={() => {
+                      setReplyTarget(null);
+                      setError(""); // Clear error when canceling
+                    }}
+                  >
+                    Cancel
+                  </button>
                 </div>
               )}
 
@@ -188,7 +213,10 @@ function ForumDetail() {
         <textarea
           placeholder="Write a comment..."
           value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
+          onChange={(e) => {
+            setNewComment(e.target.value);
+            if (error) setError(""); // Clear error when the user types
+          }}
         />
         <button onClick={handleCommentSubmit}>Post Comment</button>
       </div>

@@ -34,7 +34,12 @@ function GameDetails() {
   useEffect(() => {
     const fetchGameDetails = async () => {
       try {
-        const data = await fetchOrAddGame(rawgId);
+        const url = `${process.env.REACT_APP_BACKEND_URL}/games/${rawgId}`;
+        console.log("Fetching game details from:", url);
+  
+        const data = await fetchOrAddGame(rawgId); // Ensure fetchOrAddGame is properly using /api
+        console.log("Game details fetched successfully:", data);
+  
         setGame(data);
         setAverageRating(data.average_rating || null);
       } catch (error) {
@@ -43,7 +48,7 @@ function GameDetails() {
         setLoading(false);
       }
     };
-
+  
     fetchGameDetails();
   }, [rawgId]);
 
@@ -176,22 +181,31 @@ function GameDetails() {
     <div className="game-details-container">
       <h1>{game.title}</h1>
       {game.image_url && <img src={game.image_url} alt={game.title} className="game-image" />}
-
+  
       <div className="rating-section">
         <p>
-          <strong>Average Rating:</strong> {averageRating === null || averageRating === 0 ? "No Reviews Yet..." : parseFloat(averageRating).toFixed(1)}
+          <strong>Average Rating:</strong>{" "}
+          {averageRating === null || averageRating === 0
+            ? "No Reviews Yet..."
+            : parseFloat(averageRating).toFixed(1)}
         </p>
-
-        {userRating !== null ? (
-          <div>
-            <p>Your Rating: {userRating}</p>
-            <button onClick={() => setShowRatingForm(true)}>Edit Rating</button>
-          </div>
+  
+        {user ? (
+          userRating !== null ? (
+            <div>
+              <p>Your Rating: {userRating}</p>
+              <button onClick={() => setShowRatingForm(true)}>Edit Rating</button>
+            </div>
+          ) : (
+            <button onClick={() => setShowRatingForm(true)}>Rate It</button>
+          )
         ) : (
-          <button onClick={() => setShowRatingForm(true)}>Rate It</button>
+          <button onClick={() => alert("You need to be logged in to submit a rating!")}>
+            Rate It
+          </button>
         )}
       </div>
-
+  
       {user ? (
         showRatingForm && (
           <div className="rating-form">
@@ -217,7 +231,11 @@ function GameDetails() {
         </div>
       )}
   
-      {game.description && <p><strong>Description:</strong> {game.description}</p>}
+      {game.description && (
+        <p>
+          <strong>Description:</strong> {game.description}
+        </p>
+      )}
       {game.release_year && <p><strong>Release Year:</strong> {game.release_year}</p>}
       {game.platform && <p><strong>Platforms:</strong> {game.platform}</p>}
       {game.genre && <p><strong>Genres:</strong> {game.genre}</p>}
@@ -241,38 +259,44 @@ function GameDetails() {
   
       <section className="user-review-section">
         <h2>Your Review</h2>
-        {userReview ? (
-          <div className="existing-review">
-            <p>{userReview.review_text}</p>
-            <button
-              onClick={() => {
-                setIsEditingReview(true);
-                setEditReviewText(userReview.review_text);
-              }}
-            >
-              Edit Review
-            </button>
-            <button onClick={handleDeleteReview}>Delete Review</button>
-          </div>
+        {user ? (
+          userReview ? (
+            <div className="existing-review">
+              <p>{userReview.review_text}</p>
+              <button
+                onClick={() => {
+                  setIsEditingReview(true);
+                  setEditReviewText(userReview.review_text);
+                }}
+              >
+                Edit Review
+              </button>
+              <button onClick={handleDeleteReview}>Delete Review</button>
+            </div>
+          ) : (
+            <>
+              {!showReviewForm ? (
+                <button onClick={() => setShowReviewForm(true)}>Write a Review</button>
+              ) : (
+                <form onSubmit={handleReviewSubmit} className="review-form">
+                  <textarea
+                    value={newReviewText}
+                    onChange={(e) => setNewReviewText(e.target.value)}
+                    placeholder="Share your thoughts about the game..."
+                    required
+                  />
+                  <div className="review-form-buttons">
+                    <button type="submit">Submit Review</button>
+                    <button type="button" onClick={() => setShowReviewForm(false)}>Cancel</button>
+                  </div>
+                </form>
+              )}
+            </>
+          )
         ) : (
-          <>
-            {!showReviewForm ? (
-              <button onClick={() => setShowReviewForm(true)}>Write a Review</button>
-            ) : (
-              <form onSubmit={handleReviewSubmit} className="review-form">
-                <textarea
-                  value={newReviewText}
-                  onChange={(e) => setNewReviewText(e.target.value)}
-                  placeholder="Share your thoughts about the game..."
-                  required
-                />
-                <div className="review-form-buttons">
-                  <button type="submit">Submit Review</button>
-                  <button type="button" onClick={() => setShowReviewForm(false)}>Cancel</button>
-                </div>
-              </form>
-            )}
-          </>
+          <button onClick={() => alert("You need to be logged in to write a review!")}>
+            Write a Review
+          </button>
         )}
   
         {isEditingReview && (
@@ -292,6 +316,7 @@ function GameDetails() {
       </section>
     </div>
   );
-}  
+  
 
+}
 export default GameDetails;

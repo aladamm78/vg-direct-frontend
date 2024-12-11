@@ -15,6 +15,7 @@ function Profile() {
   const [createdForums, setCreatedForums] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [comments, setComments] = useState([]);
+  const BASE_URL = "https://vg-direct-backend-1.onrender.com";
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -27,21 +28,21 @@ function Profile() {
 
         const headers = { Authorization: `Bearer ${token}` };
 
-        const res = await axios.get(`/api/users/${username}`, { headers });
+        const res = await axios.get(`${BASE_URL}/api/users/${username}`, { headers });
         setFormData({ username: res.data.username, email: res.data.email, password: "" });
 
-        const forumsRes = await axios.get(`/api/forum-posts/created-by/${user.user_id}`, { headers });
+        const forumsRes = await axios.get(`${BASE_URL}/api/forum-posts/created-by/${user.user_id}`, { headers });
         setCreatedForums(forumsRes.data || []);
 
-        const reviewsRes = await axios.get(`/api/reviews/user/${user.user_id}`, { headers });
+        const reviewsRes = await axios.get(`${BASE_URL}/api/reviews/user/${user.user_id}`, { headers });
         setReviews(reviewsRes.data || []);
 
-        const commentsRes = await axios.get(`/api/comments/user/${user.user_id}`, { headers });
+        const commentsRes = await axios.get(`${BASE_URL}/api/comments/user/${user.user_id}`, { headers });
         setComments(commentsRes.data || []);
 
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        
         setLoading(false);
       }
     };

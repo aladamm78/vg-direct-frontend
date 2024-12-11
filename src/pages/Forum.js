@@ -15,19 +15,25 @@ function Forum() {
     // Fetch forum posts and genres on component mount
     const fetchData = async () => {
       try {
+        const postsURL = `${BASE_URL}/api/forum-posts`;
+        const genresURL = `${BASE_URL}/api/genres`;
+        console.log("Fetching forum posts from:", postsURL);
+        console.log("Fetching genres from:", genresURL);
+  
         const [postsResponse, genresResponse] = await Promise.all([
-          fetch(`${BASE_URL}/api/forum-posts`),
-          fetch(`${BASE_URL}/api/genres`),
+          fetch(postsURL),
+          fetch(genresURL),
         ]);
-
+  
         if (!postsResponse.ok || !genresResponse.ok) {
           throw new Error("Failed to fetch data");
         }
-
+  
         const postsData = await postsResponse.json();
         const genresData = await genresResponse.json();
-
-        console.log("Fetched Posts:", postsData); // Confirm data fetched from the backend
+  
+        console.log("Fetched Posts Data:", postsData); // Confirm data fetched from the backend
+        console.log("Fetched Genres Data:", genresData); // Confirm genres fetched
         setPosts(postsData || []); // Set fetched posts
         setGenres(genresData || []); // Set fetched genres
       } catch (error) {
@@ -36,7 +42,7 @@ function Forum() {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
 
@@ -146,7 +152,6 @@ function Forum() {
         {sortedPosts && sortedPosts.length > 0 ? (
           sortedPosts.map((post) => (
             <li key={post.post_id} className="post-card">
-              {/* Updated to use Link */}
               <h2 className="post-title">
                 <Link
                   to={`/forum/${encodeURIComponent(post.title)}`}
@@ -156,12 +161,16 @@ function Forum() {
                 </Link>
               </h2>
               <p className="post-body">{post.body.substring(0, 100)}...</p>
-              <p className="post-tags">
-                Tags:{" "}
-                {post.tags && post.tags.length > 0
-                  ? post.tags.join(", ")
-                  : "None"}
-              </p>
+              
+              {/* Only display tags if no genre filter is applied */}
+              {!selectedGenre && (
+                <p className="post-tags">
+                  Tags:{" "}
+                  {post.tags && post.tags.length > 0
+                    ? post.tags.join(", ")
+                    : "None"}
+                </p>
+              )}
               <div className="post-meta">
                 <span className="comment-count">Comments: {post.comment_count}</span>
                 <span className="post-date">

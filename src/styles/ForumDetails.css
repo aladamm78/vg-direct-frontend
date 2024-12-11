@@ -184,3 +184,16 @@
     background-color: #999;
   }
   
+  .error-message {
+    color: #d9534f; /* A softer red tone */
+    background-color: #f8d7da; /* Light red background for emphasis */
+    padding: 10px;
+    border: 1px solid #f5c2c7; /* Subtle border for better visibility */
+    border-radius: 8px;
+    font-size: 14px; /* Slightly smaller size to fit well in the layout */
+    font-weight: bold; /* Bold text for emphasis */
+    margin: 15px 0; /* Add spacing above and below */
+    text-align: center; /* Center the message */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for a modern look */
+  }
+  

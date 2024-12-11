@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://vg-direct-backend.onrender.com/api",
+  baseURL: "https://vg-direct-backend-1.onrender.com",
 });
 
-const BASE_URL = process.env.REACT_APP_BACKEND_URL || "https://vg-direct-backend.onrender.com/api"; 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL || "https://vg-direct-backend-1.onrender.com"; 
 const API_BASE_URL = BASE_URL;
 
 // Add or update a rating
@@ -13,10 +13,10 @@ const addOrUpdateRating = async (token, rawgId, score) => {
     const headers = { Authorization: `Bearer ${token}` };
     const data = { game_id: rawgId, score }; 
 
-    const response = await axios.post(`${BASE_URL}/ratings`, data, { headers });
+    const response = await axios.post(`${BASE_URL}/api/ratings`, data, { headers });
     return response.data;
   } catch (error) {
-    console.error("Error adding/updating rating:", error);
+       console.error("Error adding/updating rating:", error);
     throw error;
   }
 };
@@ -25,7 +25,7 @@ const addOrUpdateRating = async (token, rawgId, score) => {
 const getAverageRating = async (rawgId) => {
   try {
     // Use rawgId directly in the endpoint
-    const response = await axios.get(`${BASE_URL}/ratings/${rawgId}/average-rating`);
+    const response = await axios.get(`${BASE_URL}/api/ratings/${rawgId}/average-rating`);
     return response.data; // Ensure backend returns { averageRating: <value> }
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -42,7 +42,7 @@ const getAverageRating = async (rawgId) => {
 const getUserRating = async (rawgId, userId) => {
   try {
     // Use rawgId directly in the endpoint
-    const response = await axios.get(`${BASE_URL}/ratings/${rawgId}/${userId}`);
+    const response = await axios.get(`${BASE_URL}/api/ratings/${rawgId}/${userId}`);
     return response.data; // Response will include { score: <value or null> }
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -59,7 +59,7 @@ const getUserRating = async (rawgId, userId) => {
 const fetchOrAddGame = async (rawgId) => {
   try {
     // Call the backend to fetch or add the game
-    const response = await axios.get(`${BASE_URL}/games/${rawgId}`);
+    const response = await axios.get(`${BASE_URL}/api/games/${rawgId}`);
     return response.data; // Return the game details
   } catch (error) {
     console.error("Error fetching or adding game:", error.response?.data || error.message);
@@ -84,13 +84,13 @@ const getForumsCreatedByUser = async (userId, token) => {
 };
 
 const fetchReviews = async (rawgId) => {
-  const response = await fetch(`${BASE_URL}/reviews/${rawgId}`);
+  const response = await fetch(`${BASE_URL}/api/reviews/${rawgId}`);
   return response.json();
 };
 
 const addReview = async (token, rawgId, reviewText) => {
   try {
-    const response = await fetch(`/api/reviews`, {
+    const response = await fetch(`${BASE_URL}/api/reviews`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export async function fetchUserReviews(userId) {
 // Edit an existing review
 export async function editReview(reviewId, reviewText) {
   const token = localStorage.getItem("token");
-  const response = await fetch(`/api/reviews/${reviewId}`, {
+  const response = await fetch(`${BASE_URL}/api/reviews/${reviewId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -144,7 +144,7 @@ export async function editReview(reviewId, reviewText) {
 // Delete an existing review
 export async function deleteReview(reviewId) {
   const token = localStorage.getItem("token");
-  const response = await fetch(`/api/reviews/${reviewId}`, {
+  const response = await fetch(`${BASE_URL}/api/reviews/${reviewId}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -195,6 +195,29 @@ const updateUserProfile = async (username, data) => {
   } catch (error) {
     console.error("Error updating user profile:", error.response?.data || error.message);
     throw error;
+  }
+};
+
+export const postReview = async (rawg_id, review_text) => {
+  try {
+    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+    if (!token) throw new Error("User is not authenticated");
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    const response = await axios.post(
+      `${BASE_URL}/api/reviews`,
+      { rawg_id, review_text },
+      { headers }
+    );
+
+    return response.data; // Return the response data
+  } catch (error) {
+    console.error("Error posting review:", error.response || error.message);
+    throw error; // Rethrow the error for the caller to handle
   }
 };
 

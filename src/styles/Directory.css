@@ -90,31 +90,24 @@ h1 {
   }
   
   /* Input and Go button for page jump */
-  .page-input-container {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .page-input-container input {
-    width: 50px;
+  .pagination-controls input {
+    width: 60px;
     padding: 5px;
+    font-size: 14px;
     text-align: center;
     border: 1px solid #ccc;
     border-radius: 4px;
+    outline: none;
   }
   
-  .page-input-container button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  .pagination-controls input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
   }
   
-  .page-input-container button:hover {
-    background-color: #0056b3;
+  .pagination-controls input::placeholder {
+    color: #aaa;
+    font-style: italic;
   }
   
   .page-info {
