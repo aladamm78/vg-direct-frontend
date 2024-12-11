@@ -25,30 +25,51 @@ function Profile() {
           navigate("/login");
           return;
         }
-
+  
+        // Decode the token to get the user_id
+        const tokenPayload = JSON.parse(atob(token.split(".")[1])); // Decoding the JWT payload
+        const userId = tokenPayload.user_id;
+  
+        if (!userId) {
+          throw new Error("User ID is missing from the token.");
+        }
+  
         const headers = { Authorization: `Bearer ${token}` };
-
-        const res = await axios.get(`${BASE_URL}/api/users/${username}`, { headers });
-        setFormData({ username: res.data.username, email: res.data.email, password: "" });
-
-        const forumsRes = await axios.get(`${BASE_URL}/api/forum-posts/created-by/${user.user_id}`, { headers });
+  
+        // Fetch user details
+        const userResponse = await axios.get(`${BASE_URL}/api/users/${username}`, { headers });
+        const userDetails = userResponse.data;
+  
+        setFormData({
+          username: userDetails.username,
+          email: userDetails.email,
+          password: "",
+        });
+  
+        // Fetch forums created by the user
+        const forumsRes = await axios.get(`${BASE_URL}/api/forum-posts/created-by/${userId}`, { headers });
         setCreatedForums(forumsRes.data || []);
-
-        const reviewsRes = await axios.get(`${BASE_URL}/api/reviews/user/${user.user_id}`, { headers });
+  
+        // Fetch reviews by the user
+        const reviewsRes = await axios.get(`${BASE_URL}/api/reviews/user/${userId}`, { headers });
         setReviews(reviewsRes.data || []);
-
-        const commentsRes = await axios.get(`${BASE_URL}/api/comments/user/${user.user_id}`, { headers });
+  
+        // Fetch comments by the user
+        const commentsRes = await axios.get(`${BASE_URL}/api/comments/user/${userId}`, { headers });
         setComments(commentsRes.data || []);
-
+  
         setLoading(false);
       } catch (error) {
-        
+        console.error("Error fetching user profile data:", error);
         setLoading(false);
       }
     };
-
+  
     fetchUserProfile();
-  }, [username, user, navigate]);
+  }, [username, navigate]);
+  
+  
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

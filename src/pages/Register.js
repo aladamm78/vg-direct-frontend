@@ -1,10 +1,9 @@
-// src/pages/Register.js
 import React, { useState, useContext } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import "../styles/AuthPages.css";
 import { BASE_URL } from "../services/api";
-
 
 function Register() {
   const [formData, setFormData] = useState({ username: "", email: "", password: "" });
@@ -12,6 +11,35 @@ function Register() {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
   
+  const validateUsername = (username) => {
+    const minLength = 3;
+    const maxLength = 30;
+    const regex = /^[a-zA-Z0-9_-]+$/;
+
+    if (username.length < minLength) {
+      return "Username must be at least 3 characters long.";
+    }
+    if (username.length > maxLength) {
+      return "Username cannot exceed 30 characters.";
+    }
+    if (!regex.test(username)) {
+      return "Username can only contain letters, numbers, underscores, or hyphens.";
+    }
+    return null;
+  };
+
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (password.length < minLength) {
+      return "Password must be at least 8 characters long.";
+    }
+    if (!regex.test(password)) {
+      return "Password must include at least one letter, one number, and one special character.";
+    }
+    return null;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,18 +48,34 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form data:", formData);
     setError(null); // Clear any previous errors
+  
+    // Validate username before submitting
+    const usernameError = validateUsername(formData.username);
+    if (usernameError) {
+      setError(usernameError);
+      return;
+    }
+  
+    // Validate password before submitting
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setError(passwordError);
+      return;
+    }
+  
     try {
-      const response = await fetch(`${BASE_URL}/api/auth/register`, {
-        method: "POST",
+      // Use axios for the request
+      const response = await axios.post(`${BASE_URL}/api/auth/register`, formData, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
       });
-
-      if (response.ok) {
-        const { token } = await response.json();
+  
+      // Handle the response
+      if (response.status === 201) {
+        const { token } = response.data;
         localStorage.setItem("token", token); // Store the token
-
+  
         // Decode token and update UserContext
         try {
           const decodedToken = JSON.parse(atob(token.split(".")[1]));
@@ -45,8 +89,8 @@ function Register() {
         setError("Registration failed. Please try again.");
       }
     } catch (error) {
-      console.error("Error registering:", error);
-      setError("An unexpected error occurred. Please try again.");
+      console.error("Error registering:", error.response?.data || error.message);
+      setError(error.response?.data?.error || "An unexpected error occurred. Please try again.");
     }
   };
 
